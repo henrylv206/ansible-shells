@@ -1,0 +1,115 @@
+# Create an OSEv3 group that contains the masters, nodes, and etcd groups [OSEv3:children] masters
+[OSEv3:children]
+masters
+nodes
+etcd
+nfs
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=root
+
+# If ansible_ssh_user is not root, ansible_become must be set to true
+#ansible_become=true
+
+openshift_http_proxy=http://192.168.177.74:3128
+openshift_https_proxy=http://192.168.177.74:3128
+openshift_no_proxy=.jd.com,.jd.local,.cluster.local,.svc,10.196.69.130,10.196.69.170,10.196.69.43,172.30.0.1
+openshift_generate_no_proxy_hosts=false
+
+openshift_deployment_type=origin
+
+openshift_master_default_subdomain=apps.okstack.com
+
+#openshift_master_console_use_ssl=False
+openshift_master_public_console_url=https://openshift-console-default.apps.okstack.com/console
+openshift_master_cluster_public_hostname=openshift-console-default.apps.okstack.com
+openshift_master_public_api_url=https://openshift-console-default.apps.okstack.com
+
+openshift_master_session_encryption_secrets=['DONT+USE+THIS+SECRET+b4NV+pmZNSO']
+openshift_master_session_auth_secrets=['DONT+USE+THIS+SECRET+b4NV+pmZNSO']
+
+#openshift_release=v3.9
+#openshift_image_tag=v3.9
+# uncomment the following to enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
+#openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+#openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+openshift_master_identity_providers=[{'name': 'allow_all', 'login': 'true', 'challenge': 'true', 'kind': 'AllowAllPasswordIdentityProvider'}]
+
+#openshift_master_console_use_ssl=False
+#openshift_master_api_use_ssl=False
+
+#os_sdn_network_plugin_name=cni
+#openshift_use_calico=true
+#openshift_use_openshift_sdn=false
+
+os_sdn_network_plugin_name=redhat/openshift-ovs-networkpolicy
+
+
+openshift_use_manageiq=False
+openshift_master_ha=False
+
+openshift_enable_service_catalog=false
+
+openshift_router_selector='region=primary'
+openshift_registry_selector='region=primary'
+
+openshift_management_storage_nfs_local_hostname=node11
+
+openshift_management_install_management=False
+
+openshift_management_storage_nfs_base_dir=/export/exports
+
+openshift_hosted_registry_storage_nfs_directory=/export/exports
+openshift_metrics_storage_nfs_directory=/export/exports
+openshift_logging_storage_nfs_directory=/export/exports
+openshift_prometheus_storage_nfs_directory=/export/exports
+openshift_prometheus_alertmanager_storage_nfs_directory=/export/exports
+openshift_prometheus_alertbuffer_storage_nfs_directory=/export/exports
+
+openshift_loggingops_storage_nfs_directory=/export/exports
+openshift_hosted_etcd_storage_nfs_directory=/export/exports
+
+openshift_metrics_install_metrics=True
+openshift_logging_install_logging=true
+
+openshift_data_dir=/export/origin
+
+openshift_metrics_hawkular_metrics_image=docker.io/openshift/origin-metrics-hawkular-metrics:v3.7.1
+openshift_metrics_cassandra_image=docker.io/openshift/origin-metrics-cassandra:v3.7.1
+openshift_metrics_heapster_image=docker.io/openshift/origin-metrics-heapster:v3.7.1
+
+openshift_hosted_logging_deployer_version=v3.7.1
+
+openshift_hosted_prometheus_deploy=true
+
+openshift_hosted_grafana_deploy=true
+
+
+[nfs]
+node11
+
+# host group for masters
+[masters]
+node11 
+node12
+node13
+
+# host group for etcd
+[etcd]
+node11
+node12
+node13
+
+# host group for nodes, includes region info
+[nodes]
+node11 openshift_node_labels="{'region': 'primary', 'zone': 'default'}" openshift_docker_options="-g /export/docker --insecure-registry j-harbor.jd.com --insecure-registry 192.168.177.74:5000 --registry-mirror http://192.168.177.74:5000" openshift_schedulable=true
+node12 openshift_node_labels="{'region': 'primary', 'zone': 'default'}" openshift_docker_options="-g /export/docker --insecure-registry j-harbor.jd.com --insecure-registry 192.168.177.74:5000 --registry-mirror http://192.168.177.74:5000" openshift_schedulable=true
+node13 openshift_node_labels="{'region': 'primary', 'zone': 'default'}" openshift_docker_options="-g /export/docker --insecure-registry j-harbor.jd.com --insecure-registry 192.168.177.74:5000 --registry-mirror http://192.168.177.74:5000" openshift_schedulable=true
+
+
+node09 openshift_hostname=node09 openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_docker_options="-g /export/docker --insecure-registry j-harbor.jd.com --insecure-registry 192.168.177.74:5000 --registry-mirror http://192.168.177.74:5000" openshift_schedulable=true
+node10 openshift_hostname=node10 openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_docker_options="-g /export/docker --insecure-registry j-harbor.jd.com --insecure-registry 192.168.177.74:5000 --registry-mirror http://192.168.177.74:5000" openshift_schedulable=true
+
+node17 openshift_hostname=node17 openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_docker_options="-g /export/docker --insecure-registry j-harbor.jd.com --insecure-registry 192.168.177.74:5000 --registry-mirror http://192.168.177.74:5000" openshift_schedulable=true
