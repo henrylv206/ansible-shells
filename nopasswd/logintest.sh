@@ -12,7 +12,7 @@ spawn ssh-copy-id [lindex $argv 1]@[lindex $argv 0]
 #}
 
 expect "assword:" {
-              send "[lindex $argv 2]\r"
+              send "Zl^Xt1Qb*D2018@cloud\r"
        }
 
 interact

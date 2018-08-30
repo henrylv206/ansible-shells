@@ -12,4 +12,4 @@ expect "密码" {
 }
 
 
-#interact
+interact

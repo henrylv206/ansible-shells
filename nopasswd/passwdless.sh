@@ -2,7 +2,7 @@
 
 echo "test"  $0
 
-arr=(192.168.168.73
+arr=(
 192.168.168.30
 192.168.168.77
 192.168.177.91
@@ -16,6 +16,9 @@ echo "IP数量：" $num
 
 for ((i=0;i<num;i++))
 {
-  echo ${arr[i]}
+  echo ${arr[i]} root "Zl^Xt1Qb*D2018@cloud"
   ./expectpasswd.sh ${arr[i]} root Zl^Xt1Qb*D2018@cloud
+
+  echo "finished"
+
 }
